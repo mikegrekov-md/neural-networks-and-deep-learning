@@ -1,5 +1,7 @@
 import numpy as np
 import time
+from utils import *
+from utils import paint_output
 
 '''
 p20 examples easy gradient descent example
@@ -70,13 +72,16 @@ start_time_option2 = time.time()
 step_hessian_option2 = np.linalg.solve(hessian, gradients)  #
 v_newton_formula = v - step_hessian_option2
 y_newton = np.dot(v_newton_formula, x)
-print(f"y_newton_option2: {y_newton}, time: {round(time.time() - start_time_option2, 4)}")
+
+with color(RED):
+    print(f"y_newton_option2: {y_newton}, time: {round(time.time() - start_time_option2, 4)}")
 
 start_time_option1 = time.time()
 step_hessian_option1 = hessian_inveted.dot(gradients)  #
 v_newton_formula = v - step_hessian_option1
 y_newton = np.dot(v_newton_formula, x)
-print(f"y_newton_option1: {y_newton}, time: {round(time.time() - start_time_option1, 4)}\n")
+with color(RED):
+    print(f"y_newton_option1: {y_newton}, time: {round(time.time() - start_time_option1, 4)}\n")
 #so option 1 is less perscise but faster than option 2
 
 time_option3 = time.time()
@@ -89,7 +94,8 @@ while True:
     if abs(round(fp[3], 3)) == 0 or step > 1000:
         print(f"new v: {fp[0]}, grad: {fp[3]}")
         break
-print(f"time option3 = {round(time.time() - time_option3, 4)}")
+with color(RED):
+    print(f"time option3 = {round(time.time() - time_option3, 4)}")
 
 print("-" * 90)
 
