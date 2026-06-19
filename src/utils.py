@@ -30,3 +30,10 @@ RED = Fore.RED
 GREEN = Fore.GREEN
 YELLOW = Fore.YELLOW
 BRIGHT = Style.BRIGHT
+
+def disable(func):
+    def wrapper(*args, **kwargs):
+        # We just print a warning and return None without running the function
+        print(f"⚠️ Code skipped: '{func.__name__}' is currently disabled.")
+        return None
+    return wrapper
