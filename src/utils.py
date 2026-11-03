@@ -1,9 +1,16 @@
 from colorama import Fore, Back, Style, init
-from functools import wraps
+# from functools import wraps
+import traceback
+import json
+
+import functools
+import sys
+import inspect
+
 # init(autoreset=True)
 def paint_output(color_code, style_code=Style.NORMAL):
     def decorator(func):
-        @wraps(func)
+        @functools.wraps(func)
         def wrapper(*args, **kwargs):
             # Включаем цвет перед запуском функции
             print(f"{style_code}{color_code}", end="")
@@ -36,4 +43,17 @@ def disable(func):
         # We just print a warning and return None without running the function
         print(f"⚠️ Code skipped: '{func.__name__}' is currently disabled.")
         return None
+    return wrapper
+
+def log_errors(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            caller = inspect.stack()[1].function
+            print(f"{Fore.RED}Error in {func.__name__} (called by {caller}): {e} {Style.RESET_ALL}")
+            print(f"traceback.format_exc(): {traceback.format_exc()}")
+            return 0.0
+
     return wrapper
