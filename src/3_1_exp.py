@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-def save_history(cost, w,b,a):
+def save_history(history, cost, w,b,a):
     history['cost'].append(cost)
     history['weight'].append(w)
     history['bias'].append(b)
@@ -17,12 +17,12 @@ y = 0.0
 # 3\. Инициализация параметров случайно
 np.random.seed(42)
 # w = np.random.randn()
-w = -0.6
+w = w_cross_entropy = 2
 # Вес
 # b = np.random.randn()   # Смещение (bias)
-b = 0.9   # Смещение (bias)
-learning_rate = 1.0     # Скорость обучения
-epochs = 1500 # Количество шагов обучения
+b = b_cross_entropy = 0.9   # Смещение (bias)
+learning_rate = 0.1150     # Скорость обучения
+epochs = 300 # Количество шагов обучения
 print(f"Начальный вес w: {w:.4f}, смещение b: {b:.4f}")
 print(f"Начальный выход: {sigmoid(w * x + b):.4f}\\n")
 # Списки для сохранения истории
@@ -42,11 +42,14 @@ for epoch in range(1, epochs + 1): # --- Прямой проход (Forward pass
     # Градиент ошибки по выходу: dC/da = a - y
     # Производная сигмоиды: da/dz = a * (1 - a)
     # Производная взвешенной суммы: dz/dw = x, dz/db = 1
-    save_history(cost,w,b,a)
+    save_history(history, cost,w,b,a)
     delta = (a - y) * a * (1.0 - a)
+    delta_cross_entropy = (a - y)
     # dC/dz
     dw = delta * x  # dC/dw
     db = delta      # dC/db
+    dw_cross_entropy = delta_cross_entropy * x  # dC/dw
+    db_cross_entropy = delta_cross_entropy      # dC/db
     # --- Обновление весов (Gradient Descent) ---
     w -= learning_rate * dw
     b -= learning_rate * db
@@ -67,6 +70,13 @@ def show_history(history):
     axs[0, 0].set_ylabel('Cost')
     axs[0, 0].grid(True, linestyle='--', alpha=0.5)
 
+    # 4. Output (Выход)
+    axs[1, 0].plot(epochs, history['output'], color='#9b59b6', linewidth=2)
+    axs[1, 0].set_title('4. Выход нейрона (Output, y_pred)')
+    axs[1, 0].set_xlabel('Эпохи (Epochs)')
+    axs[1, 0].set_ylabel('Output')
+    axs[1, 0].grid(True, linestyle='--', alpha=0.5)
+
     # 2. Weight (Вес)
     axs[0, 1].plot(epochs, history['weight'], color='#2ecc71', linewidth=2)
     axs[0, 1].set_title('2. Вес (Weight, w)')
@@ -74,17 +84,10 @@ def show_history(history):
     axs[0, 1].grid(True, linestyle='--', alpha=0.5)
 
     # 3. Bias (Смещение / Base)
-    axs[1, 0].plot(epochs, history['bias'], color='#3498db', linewidth=2)
-    axs[1, 0].set_title('3. Смещение (Bias / Base, b)')
-    axs[1, 0].set_xlabel('Эпохи (Epochs)')
-    axs[1, 0].set_ylabel('Bias')
-    axs[1, 0].grid(True, linestyle='--', alpha=0.5)
-
-    # 4. Output (Выход)
-    axs[1, 1].plot(epochs, history['output'], color='#9b59b6', linewidth=2)
-    axs[1, 1].set_title('4. Выход нейрона (Output, y_pred)')
+    axs[1, 1].plot(epochs, history['bias'], color='#3498db', linewidth=2)
+    axs[1, 1].set_title('3. Смещение (Bias / Base, b)')
     axs[1, 1].set_xlabel('Эпохи (Epochs)')
-    axs[1, 1].set_ylabel('Output')
+    axs[1, 1].set_ylabel('Bias')
     axs[1, 1].grid(True, linestyle='--', alpha=0.5)
 
     plt.tight_layout()
